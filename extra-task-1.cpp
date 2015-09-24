@@ -94,35 +94,26 @@ int main()
 
 double time_from_utc(int utc_offset, double time)
 {
-    assert(time >=0 && time <= 24);
+    assert(time >= 0 && time <= 24);
     assert(utc_offset >= -12 && utc_offset <= 12);
-    return ((int)time + utc_offset) % 24;
-    
-    /*
-        Return UTC time in time zone utc_offset.
-
-        >>> time_from_utc(+0, 12.0)
-        12.0
- 
-        >>> time_from_utc(+1, 12.0)
-        13.0
- 
-        >>> time_from_utc(-1, 12.0)
-        11.0
- 
-        >>> time_from_utc(+6, 6.0)
-        12.0
- 
-        >>> time_from_utc(-7, 6.0)
-        23.0
- 
-        >>> time_from_utc(-1, 0.0)
-        23.0
- 
-        >>> time_from_utc(-1, 23.0)
-        22.0
- 
-        >>> time_from_utc(+1, 23.0)
-        0.0
-    */
+    if (fabs(utc_offset) > fabs(time))
+	{
+		double dif = fabs(utc_offset) - fabs(time);
+		return 24 - dif;
+	}
+	else
+	{
+		return ((int)time + utc_offset) % 24;
+	}
+}
+int main()
+{
+	assert(time_from_utc(+0, 12.0) == 12.0);
+	assert(time_from_utc(+1, 12.0) == 13.0);
+	assert(time_from_utc(-1, 12.0) == 11.0);
+	assert(time_from_utc(+6, 6.0) == 12.0);
+	assert(time_from_utc(-7, 6.0) == 23.0);
+	assert(time_from_utc(-1, 0.0) == 23.0);
+	assert(time_from_utc(-1, 23.0) == 22.0);
+	assert(time_from_utc(+1, 23.0) == 0.0);
 }
